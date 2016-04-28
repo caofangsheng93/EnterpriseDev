@@ -86,6 +86,93 @@ namespace DataModel.GenericRepository
            DbSet.Remove(deleteEntity);
        }
 
+       /// <summary>
+       /// 更新--设置实体的状态为已修改
+       /// </summary>
+       /// <param name="model"></param>
+       public virtual void Update(TEntity model)
+       { 
+           //把实体加载到数据上下文中
+           DbSet.Attach(model);
+
+           //设置实体的状态为Modified
+           Context.Entry(model).State=EntityState.Modified;
+       }
+
+       /// <summary>
+       /// 根据条件查询更多,转化为List
+       /// </summary>
+       /// <param name="where"></param>
+       /// <returns></returns>
+       public virtual IEnumerable<TEntity> GetMany(Func<TEntity, bool> where)
+       {
+           return DbSet.Where(where).ToList();
+       }
+
+       /// <summary>
+       /// 根据条件查询更多，转化为IQueryable
+       /// </summary>
+       /// <param name="where"></param>
+       /// <returns></returns>
+       public virtual IQueryable<TEntity> GetManyAsQueryable(Func<TEntity, bool> where)
+       {
+           return DbSet.Where(where).AsQueryable();
+       }
+
+       /// <summary>
+       /// 根据条件查询单个的实体TEntity
+       /// </summary>
+       /// <param name="where"></param>
+       /// <returns></returns>
+       public TEntity Get(Func<TEntity,bool> where)
+       {
+           return DbSet.Where(where).FirstOrDefault<TEntity>();
+       }
+
+      /// <summary>
+      /// 根据条件删除
+      /// </summary>
+      /// <param name="deleteWhere">要删除的</param>
+       public void Delete(Func<TEntity, bool> deleteWhere)
+       {
+           IQueryable<TEntity> entityList = DbSet.Where(deleteWhere).AsQueryable();
+           foreach (TEntity item in entityList)
+           {
+               DbSet.Remove(item);
+           }
+       }
+
+       /// <summary>
+       /// 查询所有
+       /// </summary>
+       /// <returns></returns>
+       public virtual IEnumerable<TEntity> GetAll()
+       {
+           return DbSet.ToList();
+       }
+
+       /// <summary>
+       /// 多表查询使用Include
+       /// </summary>
+       /// <param name="predicate"></param>
+       /// <param name="include"></param>
+       /// <returns></returns>
+       public IQueryable<TEntity> GetWithInclude(Func<TEntity, bool> predicate, params string[] include)
+       {
+           IQueryable<TEntity> query = this.DbSet;
+           query = include.Aggregate(query, (current, inc) => current.Include(inc));
+           return query.Where(predicate).AsQueryable();
+       }
+
+
+
+
+
+
+
+
+
+
 
 
 
