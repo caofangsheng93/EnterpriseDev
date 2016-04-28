@@ -28,10 +28,67 @@ namespace WebApi.Controllers
 
         public HttpResponseMessage Get()
         {
-
+            //获取所有的产品
             var products = _productServices.GetAllProducts();
+            ///??如果此运算符的左操作数不为 null，则此运算符将返回左操作数；否则返回右操作数。
             var productEntities = products as List<ProductEntity> ?? products.ToList();
+
+            if (productEntities.Any())
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, productEntities);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Products Not Found");
+            }
+
         }
+
+        public HttpResponseMessage Get(int id)
+        {
+            var product = _productServices.GetProductById(id);
+            if (product != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, product);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "NO Product Found for this id");
+            }
+        }
+
+        public int Post([FromBody] ProductEntity productEntity)
+        {
+            //创建产品
+            return _productServices.CreateProduct(productEntity);
+        }
+
+        public bool Put(int id, [FromBody] ProductEntity productEntity)
+        {
+            if (id > 0)
+            {
+                //更新产品
+                return _productServices.UpdateProduct(id, productEntity);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool Delete(int id)
+        {
+            if (id > 0)
+            {
+                return _productServices.DeleteProduct(id);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
 
 
 
