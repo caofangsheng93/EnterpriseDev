@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DataModel.UnitOfWork
 {
@@ -129,6 +127,7 @@ namespace DataModel.UnitOfWork
             {
                 if (disposing)
                 {
+                    //Debug在命名空间System.Diagnostics下
                     Debug.WriteLine("UnitOfWork is being Disposing");
                     _context.Dispose();
                 }
