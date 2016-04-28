@@ -164,6 +164,47 @@ namespace DataModel.GenericRepository
            return query.Where(predicate).AsQueryable();
        }
 
+       /// <summary>
+       /// 判断实体是否存在
+       /// true--表示存在
+       /// </summary>
+       /// <param name="primaryKey"></param>
+       /// <returns></returns>
+       public bool Exist(object primaryKey)
+       {
+           return DbSet.Find(primaryKey) != null;
+       }
+
+       /// <summary>
+       /// 获取单个实体
+       /// </summary>
+       /// <param name="where"></param>
+       /// <returns></returns>
+       public TEntity GetSingel(Func<TEntity, bool> where)
+       {
+           return DbSet.Single<TEntity>(where);
+       }
+
+       /// <summary>
+       /// 查询第一个实体
+       /// </summary>
+       /// <param name="where"></param>
+       /// <returns></returns>
+       public TEntity GetFirst(Func<TEntity, bool> where)
+       {
+           return DbSet.First<TEntity>(where);
+       }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
